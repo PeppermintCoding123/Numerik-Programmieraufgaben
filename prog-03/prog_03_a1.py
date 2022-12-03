@@ -19,7 +19,9 @@ def qr(A, mode="full", alg="Householder"):
     R = np.array(A.copy(), dtype=float)
 
     for j in range(0, n):
-        vs = R.copy()[j:m, j] #warum muss hier ein copy hin??
+        vs = R.copy()[j:m, j] #warum muss hier ein copy hin?? 
+        '''=> wenn kein copy bleibt Pointer auf die Spalet in R, also wird R mit veraendert. 
+        R sollte hier aber nicht veraendert werden, sondern ein neuer "unabhaeniger Vektor" erstellt & bearbeitet werden.'''
         vs[0] = vs[0] - np.linalg.norm(vs)
         vs = vs / np.linalg.norm(vs)
             
