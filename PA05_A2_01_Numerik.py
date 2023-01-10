@@ -101,7 +101,7 @@ class Lagrange_model:
         self.y = np.concatenate(self.y, y)
         
 # %% iii) --- in progress
-class Newton_model.:
+class Newton_model:
     def fit(self, x, y):
         # fit polynom at x,y and save f0,...,f0_n
         if np.shape(x)[0] != np.shape(y)[0]:
