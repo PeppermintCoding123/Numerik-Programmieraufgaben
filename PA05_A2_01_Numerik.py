@@ -101,3 +101,29 @@ class Lagrange_model:
         self.y = np.concatenate(self.y, y)
         
 # %% iii) --- in progress
+class Newton_model.:
+    def fit(self, x, y):
+        # fit polynom at x,y and save f0,...,f0_n
+        if np.shape(x)[0] != np.shape(y)[0]:
+            raise ValueError('x and y must have same dimension')
+        n = np.shape(x)[0]
+        if n<2: raise ValueError('at least two points must be given to plot graph')
+        
+        f = np.copy(y)
+        ''' dependant on what itteration k in on, f[k] will either have 
+            f0,...,i for i <= k (top row of diagram 5.18) or
+            fi-k,...,i for i>k
+        '''
+        #TODO Debug & test if implementation is correct
+        for k in range(1,n):
+            for i in range(k,n):
+                f[i]= (f[i]-f[i-1])/(x[i]-x[i-k])
+        
+        self.x = x
+        self.y = y
+        self.f = f
+        
+    def __call__(self, x):
+        pass
+    def add_points(self, x, y):
+        pass
