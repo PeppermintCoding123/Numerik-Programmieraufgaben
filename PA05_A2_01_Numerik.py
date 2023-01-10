@@ -1,6 +1,6 @@
 # --- Programmierblatt 05 Aufgabe 2 ---
 import numpy as np
-# %%
+# %% i)
 class Vandermonde_model:
     #Interpolation with Newton
     def fit(self, x, y):
@@ -31,16 +31,16 @@ class Vandermonde_model:
     def add_points(self, x, y):
         #Add aditional points from x & y without destroying existing p
         n = np.shape(self.p)
+        if n<2: raise ValueError('at least two points must be given to plot graph')
         if np.shape(x)[0] != np.shape(y)[0]:
             raise ValueError('x and y must have same dimension')
         m = np.shape(x)[0]
-        if n<2: raise ValueError('at least two points must be given to plot graph')
         
         a = np.zeros(m) 
         x = np.concatenate(self.x, x)
         y = np.concatenate(self.y, y)
         
-        for j in range(n,n+m):
+        for j in range(n,n+m): #TODO: Debugg this logic, might have errors
             Xj_k = x[j]-x[j-1]
             a[j-n] = -a[j-1]/Xj_k
             for k in range(2,j):
@@ -54,3 +54,50 @@ class Vandermonde_model:
         self.x = x
         self.y = y
         self.p = a 
+# %% ii)
+class Lagrange_model:
+    def fit(self, x, y):
+        # fit polynom at x,y and save w_k
+        if np.shape(x)[0] != np.shape(y)[0]:
+            raise ValueError('x and y must have same dimension')
+        n = np.shape(x)[0]
+        if n<2: raise ValueError('at least two points must be given to plot graph')
+        
+        w = np.zeros(n) #--- is there a better way than a doubble-for-loop?
+        for k in range(n):
+            for i in range(n):
+                w[k] /= (x[k]-x[i])
+        self.w = w        
+        self.x = x
+        self.y = y
+    
+    def __call__(self, x):
+        # x is 1D, so just 1 value
+        n = self.x.shape[0]
+        x_sum = 0
+        y_sum = 0
+        for k in range (n):
+            x_sum += (self.w[k]/(x-self.x[k]))
+            y_sum += (self.y[k]*self.w[k]/(x-self.x[k]))
+        return y_sum/x_sum
+    
+    def add_points(self, x, y):
+        #Add aditional points from x & y without destroying existing p
+        n = np.shape(self.p)
+        if n<2: raise ValueError('at least two points must be given to plot graph')
+        if np.shape(x)[0] != np.shape(y)[0]:
+            raise ValueError('x and y must have same dimension')
+        m = np.shape(x)[0]
+        
+        a = np.zeros(m) 
+        x = np.concatenate(self.x, x)
+        
+        for k in range(n,n+m):
+            for i in range(n):
+                a[k] /= (x[k]-x[i])
+        
+        self.w = np.concatenate(self.w, a)
+        self.x = x
+        self.y = np.concatenate(self.y, y)
+        
+# %% iii) --- in progress
